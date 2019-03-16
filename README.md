@@ -1,5 +1,7 @@
 # React Open Movie Database Explorer
 
+## :warning: Disclaimer: Work in progress :warning:
+
 ## Getting started
 
 1. Clone the repository
