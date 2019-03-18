@@ -39,6 +39,20 @@ class App extends Component {
     this.fetchSearchTopStories(searchTerm);
   }
 
+  fetchSearchTopStories = (searchTerm, page = 1) => {
+    fetch(
+      `${PATH_BASE}?${PARAM_API_KEY}${API_KEY}&${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}`
+    )
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw Error(response.statusText);
+      })
+      .then(result => this.setSearchTopStories({ movies: result.Search, page }))
+      .catch(e => this.setState({ error: e }));
+  };
+
   setSearchTopStories = result => {
     const { movies, page } = result;
     const { searchKey, results } = this.state;
@@ -60,27 +74,17 @@ class App extends Component {
     const { imdbID } = result;
 
     this.setState({
+      activeMovie: { ...result },
       movies: {
         ...movies,
-        [imdbID]: result
+        [imdbID]: { ...result }
       }
     });
-
-    console.log(movies[imdbID]);
   };
 
   needsToSearchMovie = imdbID => {
     const { movies } = this.state;
     return !(movies && movies[imdbID]);
-  };
-
-  fetchSearchTopStories = (searchTerm, page = 1) => {
-    fetch(
-      `${PATH_BASE}?${PARAM_API_KEY}${API_KEY}&${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}`
-    )
-      .then(response => response.json())
-      .then(result => this.setSearchTopStories({ movies: result.Search, page }))
-      .catch(e => this.setState({ error: e }));
   };
 
   needsToSearchTopStories = searchTerm => {
@@ -90,22 +94,21 @@ class App extends Component {
 
   fetchMovie = imdbID => {
     return fetch(`${PATH_BASE}?${PARAM_API_KEY}${API_KEY}&${PARAM_ID}${imdbID}`)
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw Error(response.statusText);
+      })
       .then(result => this.setSearchMovie(result))
       .catch(e => this.setState({ error: e }));
   };
 
   onGetMovieInfo = imdbID => {
-    console.log(`get movie info for: ${imdbID}`);
     const { movies } = this.state;
     if (this.needsToSearchMovie(imdbID)) {
-      this.fetchMovie(imdbID).then(() =>
-        this.setState({
-          activeMovie: movies[imdbID]
-        })
-      );
+      this.fetchMovie(imdbID);
     } else {
-      console.log(movies[imdbID]);
       this.setState({
         activeMovie: movies[imdbID]
       });
