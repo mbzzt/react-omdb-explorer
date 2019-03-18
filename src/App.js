@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import Button from './Button';
+import Search from './Search';
+import Table from './Table';
 import './App.css';
 
 const DEFAULT_QUERY = 'fight';
@@ -183,91 +186,5 @@ class App extends Component {
     );
   }
 }
-
-const Search = ({ value, onChange, onSubmit, children }) => (
-  <form onSubmit={onSubmit}>
-    <input type="text" value={value} onChange={onChange} />
-    <button type="submit">{children}</button>
-  </form>
-);
-
-const Table = ({ list, onDismiss, onGetMovieInfo, onResetActiveMovie, activeMovie }) => (
-  <div className="table" id="close">
-    {list.map(item => (
-      <div key={item.imdbID} className="table-row">
-        <span style={{ width: '40%' }}>
-          <a href={item.url}>{item.Title}</a>
-        </span>
-        <span style={{ width: '20%' }}>{item.Year}</span>
-        <span style={{ width: '20%' }}>{item.Type}</span>
-        <span style={{ width: '20%' }}>
-          <Button onClick={() => onDismiss(item.imdbID)} className="button-inline">
-            Dismiss
-          </Button>
-          <Button onClick={() => onGetMovieInfo(item.imdbID)} className="button-inline">
-            Info
-          </Button>
-        </span>
-        {
-          // activeMovie && activeMovie.imdbID === item.imdbID &&
-          // <span></span>
-        }
-      </div>
-    ))}
-    {activeMovie && (
-      <div className={`modal ${activeMovie ? 'active' : ''}`} id="modal-movie">
-        <button
-          type="button"
-          className="modal-overlay"
-          aria-label="Close"
-          onClick={onResetActiveMovie}
-        >
-          <span className="text-assistive">Close</span>
-        </button>
-        <div className="modal-container">
-          <div className="modal-header">
-            <button
-              type="button"
-              className="btn btn-clear float-right"
-              aria-label="Close"
-              onClick={onResetActiveMovie}
-            >
-              <span className="text-assistive">Close</span>
-            </button>
-            <div className="modal-title h5">Modal title</div>
-          </div>
-          <div className="modal-body">
-            <div className="content">
-              <ul>
-                {Object.keys(activeMovie).map(k =>
-                  k !== 'Poster' ? (
-                    <li key={k.toLowerCase()}>{`${k}: ${activeMovie[k]}`}</li>
-                  ) : (
-                    <li key={k.toLowerCase()}>
-                      {`${k}: `}
-                      <br />
-                      <img src={activeMovie[k]} alt={activeMovie.Title} />
-                    </li>
-                  )
-                )}
-              </ul>
-            </div>
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-primary" onClick={onResetActiveMovie}>
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-    )}
-  </div>
-);
-
-const Button = ({ onClick, className = '', children }) => (
-  <button onClick={onClick} className={className} type="button">
-    {children}
-  </button>
-);
 
 export default App;
