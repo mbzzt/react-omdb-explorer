@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Button from './Button';
-import Search from './Search';
-import Table from './Table';
+import Button from '../Button/Button';
+import Search from '../Search/Search';
+import Table from '../Table/Table';
 import './App.css';
 
 const DEFAULT_QUERY = 'fight';
